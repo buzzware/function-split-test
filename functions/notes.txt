@@ -1,0 +1,114 @@
+
+// let api,app;
+//
+// console.log('setting up '+FUNCTION_NAME);
+// switch(FUNCTION_NAME) {
+//   case 'app':
+//     api = dummy;
+//     app = require('./app/index').app;
+//     break;
+//   case 'api':
+//     api = require('./api/index');
+//     app = dummy;
+//     break;
+// }
+
+// console.log('GLOBAL');
+// console.log(JSON.stringify(process.env));
+//exports.app = app;
+
+// exports.app = jsonEndpoint('GET',async (req) => {
+//   console.log('BEGIN hello');
+//   console.log(JSON.stringify(process.env));
+//   return {
+//     success: true
+//   };
+// });
+
+
+// function timeout(promise, timeoutMillis=10000) {
+//   var timeout;
+//   return Promise.race([
+//     promise,
+//     new Promise(function(resolve, reject) {
+//       timeout = setTimeout(function() {
+//         reject(new Error('Timeout'));
+//       }, timeoutMillis);
+//     }),
+//   ]).then(function(v) {
+//     clearTimeout(timeout);
+//     return v;
+//   }, function(err) {
+//     clearTimeout(timeout);
+//     throw err;
+//   });
+// };
+
+
+// async function getData(aCollection,aId) {
+//   let ref = await timeout(adminApp.firestore().collection(aCollection).doc(aId).get());
+//   return ref.exists ? ref.data() : null;
+// }
+
+//const admin = require('firebase-admin');
+//const adminApp = admin.initializeApp();
+//adminApp.firestore().settings({timestampsInSnapshots: true});
+
+// // Create and Deploy Your First Cloud Functions
+// // https://firebase.google.com/docs/functions/write-firebase-functions
+//
+// exports.helloWorld = functions.https.onRequest((request, response) => {
+//  response.send("Hello from Firebase!");
+// });
+
+// let app = jsonEndpoint('GET',async (req) => {
+//   console.log('BEGIN hello');
+//   console.log(JSON.stringify(process.env));
+//   return {
+//     success: true
+//   };
+// });
+
+// if (FUNCTION_NAME=='app')
+//   app = require('./app/index').app;
+//
+// switch(FUNCTION_NAME) {
+//   case 'app':
+//     app = require('./app/index').app;
+//     break;
+//   case 'api':
+//     break;
+// }
+
+// let api,app;
+//
+// console.log('setting up '+FUNCTION_NAME);
+// switch(FUNCTION_NAME) {
+//   case 'app':
+//     api = dummy();
+//     app = jsonEndpoint('GET',async (req) => {
+//       console.log('BEGIN hello');
+//       console.log(JSON.stringify(process.env));
+//       return {
+//         success: true
+//       };
+//     });
+//     break;
+//   case 'api':
+//     api = dummy();
+//     app = dummy();
+//     break;
+// }
+//
+//
+// exports.app = app;
+// exports.api = api;
+// // exports.app = jsonEndpoint('GET',async (req) => {
+// //   console.log('BEGIN hello');
+// //   console.log(JSON.stringify(process.env));
+// //   return {
+// //     success: true
+// //   };
+// // });
+//
+

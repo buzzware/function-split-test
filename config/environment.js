@@ -2,7 +2,7 @@
 
 module.exports = function(environment) {
   let ENV = {
-    modulePrefix: 'latency-test-us',
+    modulePrefix: 'function-split-test',
     environment,
     rootURL: '/',
     locationType: 'hash',

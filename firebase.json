@@ -20,17 +20,10 @@
         "destination": "/index.html/#/"
       },
       {
-        "source": "/functions/heartbeat", "function": "heartbeat"
+        "source": "/app/hello", "function": "app"
       }
     ]
   },
   "functions": {
-  },
-  "storage": {
-    "rules": "storage.rules"
-  },
-  "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
   }
 }
