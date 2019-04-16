@@ -1,0 +1,36 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/images/**",
+        "destination": "/images/"
+      },
+      {
+        "source": "/designs/**",
+        "destination": "/designs/"
+      },
+      {
+        "source": "/#/**",
+        "destination": "/index.html/#/"
+      },
+      {
+        "source": "/functions/heartbeat", "function": "heartbeat"
+      }
+    ]
+  },
+  "functions": {
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}
