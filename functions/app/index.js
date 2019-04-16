@@ -1,31 +1,17 @@
-const functions = require('firebase-functions');
+const ExpressUtils = require('../utilities/ExpressUtils');
+const express = require('express');
+const morgan = require('morgan');
 
-function jsonEndpoint(aVerb,aHandler) {
-  return functions.https.onRequest(async function (req,res) {
-    try {
-      if (aVerb && (req.method !== aVerb))
-        throw new Error('Only '+aVerb+' is supported');
-      var response;
+exports.app = function(expressApp) {
 
-      let output = await aHandler(req);
+  expressApp.use(morgan('dev'));
+  expressApp.use(express.json());
+  // expressApp.use(express.urlencoded({ extended: false }));
+  //expressApp.use(cookieParser());
+  //expressApp.use(express.static(path.join(__dirname, 'public')));
 
-      if (output) {
-        res.header({'Cache-Control': 'private, no-cache, no-store, must-revalidate'});
-        res.status(200).json(output);
-      } else {
-        res.writeHead(204, { 'Content-Type':'text/json' });
-        res.end();
-      }
-    } catch (e) {
-      res.status(e.status || 500).json({error: e.message});
-    }
+  ExpressUtils.jsonEndpoint(expressApp,null,'/express','GET',(req)=>{
+    return {message: 'hi from express'};
   });
-}
 
-exports.app = jsonEndpoint('GET',async (req) => {
-  console.log('BEGIN hello');
-  console.log(JSON.stringify(process.env));
-  return {
-    success: true
-  };
-});
+};

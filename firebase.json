@@ -8,19 +8,10 @@
     ],
     "rewrites": [
       {
-        "source": "/images/**",
-        "destination": "/images/"
+        "source": "/app/**", "function": "app"
       },
       {
-        "source": "/designs/**",
-        "destination": "/designs/"
-      },
-      {
-        "source": "/#/**",
-        "destination": "/index.html/#/"
-      },
-      {
-        "source": "/app/hello", "function": "app"
+        "source": "/api/**", "function": "api"
       }
     ]
   },
