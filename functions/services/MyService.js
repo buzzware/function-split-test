@@ -5,6 +5,7 @@ module.exports = class MyService {
 	// }
 
 	setup(app, path) {
+	  console.log('setup '+path);
 		//feathersExpressApp.service('hello')
 		// this.hooks({
 		// 	before: {

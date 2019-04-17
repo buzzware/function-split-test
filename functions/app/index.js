@@ -10,7 +10,7 @@ exports.app = function(expressApp) {
   //expressApp.use(cookieParser());
   //expressApp.use(express.static(path.join(__dirname, 'public')));
 
-  ExpressUtils.jsonEndpoint(expressApp,null,'/app/express','GET',(req)=>{
+  ExpressUtils.jsonEndpoint(expressApp,null,'/express','GET',(req)=>{
     return {message: 'hi from express'};
   });
 

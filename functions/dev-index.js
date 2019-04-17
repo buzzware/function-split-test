@@ -21,7 +21,9 @@ mainApp.all('*', async (req, res, next) => {
   return next();
 });
 
-app(mainApp); //attach express app
+let appApp = express();
+app(appApp); //attach express app
+mainApp.use('/app', appApp);
 
 // setup feathers api
 const api = express(feathers()).configure(express.rest());
@@ -29,8 +31,14 @@ api.use('/service', new MyService());
 
 // mount api to mainApp
 mainApp.use('/api', api);
+api.setup(mainApp);  // required by feathers for subapps
 
-// start server
 const server = mainApp.listen(3030);
-api.setup(server);  // required by feathers for subapps
 
+/*
+should serve at :
+
+http://localhost:3030/api/service
+http://localhost:3030/app/express
+
+*/
