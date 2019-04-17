@@ -1,26 +1,12 @@
 const {FUNCTION_NAME} = process.env;
-const ON_GCP = !!process.env.X_GOOGLE_FUNCTION_REGION;
-const ON_EMULATOR = !ON_GCP;
 
 const functions = require('firebase-functions');
 
-const feathers = require('@feathersjs/feathers');
 const express = require('@feathersjs/express');
 
-console.log(process.env);
+const mainExpress = express();
 
-function dummy(){
-  return functions.https.onRequest(function (req,res) {
-        console.log('BEGIN dummy');
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('Dummy Endpoint');
-        res.end();
-  });
-}
-
-const mainApp = express();
-
-mainApp.all('*', async (req, res, next) => {
+mainExpress.all('*', async (req, res, next) => {
   const { path } = req;
   console.info('Received request at', path);
   //console.log(req);
@@ -43,22 +29,39 @@ functions we will never execute in each runtime.
 * There are undocumented rules for how Firebase discovers exported functions, and
 some methods of conditional exports caused them to fail to be found, so this is code
 is a bit fragile.
+
+Description:
+
+Basically we create an express app (feathers version of express) and conditionally
+decorate it according to the function we are serving.
+Then we ask firebase functions to serve the express app for every function.
+
 */
 
 console.log('setting up '+FUNCTION_NAME);
 if (FUNCTION_NAME=='app') {
   const app = require('./app/index').app;
-  app(mainApp);
+  app(mainExpress);
 } else if (FUNCTION_NAME=='api') {
+  const feathers = require('@feathersjs/feathers');
   const MyService = require('./services/MyService');
-  const api = express(feathers()).configure(express.rest());
-  api.use('/service', new MyService());
-
-  // mount api to mainApp
-  mainApp.use(api);
-  api.setup(mainApp);  // required by feathers for subapps
+  const apiExpress = express(feathers()).configure(express.rest());
+  apiExpress.use('/service', new MyService());
+  apiExpress.setup(mainExpress);  // required by feathers for subapps
+  mainExpress.use(apiExpress);
 }
 
-exports.app = functions.https.onRequest(mainApp);
-exports.api = functions.https.onRequest(mainApp);
+exports.app = functions.https.onRequest(mainExpress);
+exports.api = functions.https.onRequest(mainExpress);
 
+/*
+should serve at eg. :
+
+https://us-central1-function-split-test.cloudfunctions.net/api/service
+http://localhost:3030/api/service
+
+and
+
+http://localhost:5001/function-split-test/us-central1/app/express
+http://localhost:3030/app/express
+*/
