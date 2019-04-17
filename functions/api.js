@@ -16,35 +16,35 @@ const services = require('./services');
 const appHooks = require('./app.hooks');
 const channels = require('./channels');
 
-const app = express(feathers());
+const api = express(feathers());
 
 // Load app configuration
-app.configure(configuration());
+api.configure(configuration());
 // Enable security, CORS, compression, favicon and body parsing
-app.use(helmet());
-app.use(cors());
-app.use(compress());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
+api.use(helmet());
+api.use(cors());
+api.use(compress());
+api.use(express.json());
+api.use(express.urlencoded({ extended: true }));
+api.use(favicon(path.join(api.get('public'), 'favicon.ico')));
 // Host the public folder
-app.use('/', express.static(app.get('public')));
+api.use('/', express.static(api.get('public')));
 
 // Set up Plugins and providers
-app.configure(express.rest());
+api.configure(express.rest());
 
 
 // Configure other middleware (see `middleware/index.js`)
-app.configure(middleware);
+api.configure(middleware);
 // Set up our services (see `services/index.js`)
-app.configure(services);
+api.configure(services);
 // Set up event channels (see channels.js)
-app.configure(channels);
+api.configure(channels);
 
 // Configure a middleware for 404s and the error handler
-app.use(express.notFound());
-app.use(express.errorHandler({ logger }));
+api.use(express.notFound());
+api.use(express.errorHandler({ logger }));
 
-app.hooks(appHooks);
+api.hooks(appHooks);
 
-module.exports = app;
+module.exports = api;

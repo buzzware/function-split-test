@@ -45,7 +45,17 @@ if (FUNCTION_NAME=='app') {
 } else if (FUNCTION_NAME=='api') {
   const feathers = require('@feathersjs/feathers');
   const MyService = require('./services/MyService');
-  const apiExpress = express(feathers()).configure(express.rest());
+
+  const logger = require('./logger');
+  const apiExpress = require('./api');
+  const port = apiExpress.get('port');
+  //const server = apiExpress.listen(port);
+
+  // process.on('unhandledRejection', (reason, p) =>
+  //   logger.error('Unhandled Rejection at: Promise ', p, reason)
+  // );
+
+  //const apiExpress = express(feathers()).configure(express.rest());
   apiExpress.use('/service', new MyService());
   apiExpress.setup(mainExpress);  // required by feathers for subapps
   mainExpress.use(apiExpress);
