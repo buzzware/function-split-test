@@ -21,7 +21,7 @@ mainApp.all('*', async (req, res, next) => {
   return next();
 });
 
-// app(mainApp); attach express app
+app(mainApp); //attach express app
 
 // setup feathers api
 const api = express(feathers()).configure(express.rest());
