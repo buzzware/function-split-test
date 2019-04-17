@@ -1,15 +1,36 @@
-const express = require('express');
-const Main = require('./Main');
+const feathers = require('@feathersjs/feathers');
+const express = require('@feathersjs/express');
+const MyService = require('./services/MyService');
+let app = require('./app/index').app;
 
-const baseApp = express();
-const expressApp = express();
+// function dummy(){
+//   return functions.https.onRequest(function (req,res) {
+//     console.log('BEGIN dummy');
+//     res.writeHead(200, {'Content-Type': 'text/plain'});
+//     res.end('Dummy Endpoint');
+//     res.end();
+//   });
+// }
 
-Main.setup(expressApp);
+const mainApp = express();
 
-baseApp.use('/api',expressApp);
+mainApp.all('*', async (req, res, next) => {
+  const { path } = req;
+  console.info('Received request at', path);
+  //console.log(req);
+  return next();
+});
 
-baseApp.listen(3000);
+// app(mainApp); attach express app
 
-// module.exports = {
-// 	api: expressApp,
-// };
+// setup feathers api
+const api = express(feathers()).configure(express.rest());
+api.use('/service', new MyService());
+
+// mount api to mainApp
+mainApp.use('/api', api);
+
+// start server
+const server = mainApp.listen(3030);
+api.setup(server);  // required by feathers for subapps
+
