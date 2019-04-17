@@ -12,28 +12,26 @@ let app = require('./app/index').app;
 //   });
 // }
 
-const mainApp = express();
+const mainExpress = express();
 
-mainApp.all('*', async (req, res, next) => {
+mainExpress.all('*', async (req, res, next) => {
   const { path } = req;
   console.info('Received request at', path);
   //console.log(req);
   return next();
 });
 
-let appApp = express();
-app(appApp); //attach express app
-mainApp.use('/app', appApp);
+let appExpress = express();
+app(appExpress);
+mainExpress.use('/app', appExpress);
 
 // setup feathers api
-const api = express(feathers()).configure(express.rest());
-api.use('/service', new MyService());
+const apiExpress = express(feathers()).configure(express.rest());
+apiExpress.use('/service', new MyService());
+mainExpress.use('/api', apiExpress);
+apiExpress.setup(mainExpress);  // required by feathers for subapps
 
-// mount api to mainApp
-mainApp.use('/api', api);
-api.setup(mainApp);  // required by feathers for subapps
-
-const server = mainApp.listen(3030);
+const server = mainExpress.listen(3030);
 
 /*
 should serve at :

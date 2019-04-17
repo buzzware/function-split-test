@@ -4,6 +4,7 @@ const functions = require('firebase-functions');
 const feathers = require('@feathersjs/feathers');
 const express = require('@feathersjs/express');
 
+console.log(process.env);
 
 function dummy(){
   return functions.https.onRequest(function (req,res) {
@@ -39,5 +40,9 @@ if (FUNCTION_NAME=='app') {
   api.setup(mainApp);  // required by feathers for subapps
 }
 
-exports.app = app ? functions.https.onRequest(mainApp) : dummy();
-exports.api = api ? functions.https.onRequest(mainApp) : dummy();
+// // do this later to separate hosting and save startup time and memory
+// exports.app = app ? functions.https.onRequest(mainApp) : dummy();
+// exports.api = api ? functions.https.onRequest(mainApp) : dummy();
+
+exports.app = functions.https.onRequest(mainApp);
+exports.api = functions.https.onRequest(mainApp);
