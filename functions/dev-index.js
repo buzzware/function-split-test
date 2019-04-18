@@ -1,10 +1,14 @@
 const express = require('@feathersjs/express');
 
-const ExpressAppBuilder = require('./ExpressAppBuilder');
+function loadAndBuild(aEndpoint,aExpress) {
+  const {build} = require('./'+aEndpoint);
+  return build(aExpress);
+}
 
-const main = ExpressAppBuilder.buildMain();
-const api = ExpressAppBuilder.buildApi();
-const front = ExpressAppBuilder.buildFront();
+
+const main = loadAndBuild('main'  );
+const api = loadAndBuild('api');
+const front = loadAndBuild('front');
 
 let port = api.get('port');
 

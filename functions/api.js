@@ -16,7 +16,10 @@ const services = require('./services');
 const appHooks = require('./app.hooks');
 const channels = require('./channels');
 
-function build() {
+//const feathers = require('@feathersjs/feathers');
+const MyService = require('./services/MyService');
+
+module.exports.build = function(aExpress) {
 
   const api = express(feathers());
 
@@ -45,10 +48,16 @@ function build() {
 
 // Configure a middleware for 404s and the error handler
   // api.use(express.notFound()); // let our api handle its endpoints
- api.use(express.errorHandler({logger}));
+  api.use(express.errorHandler({logger}));
+
+  api.use('/service', new MyService());
 
   api.hooks(appHooks);
-  return api;
+
+  if (aExpress)
+    aExpress.use(api);
+  let result = aExpress || api;
+  api.setup(result);  // required by feathers for subapps
+  return result;
 }
 
-module.exports = build;

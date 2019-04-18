@@ -4,7 +4,6 @@ const {FUNCTION_NAME} = process.env;
 
 const express = require('@feathersjs/express');
 
-const ExpressAppBuilder = require('./ExpressAppBuilder');
 
 /*
 
@@ -30,12 +29,18 @@ decorate it according to the function we are serving.
 Then we ask firebase functions to serve the express app for every function.
 
 */
-const main = ExpressAppBuilder.buildMain(express());
 
-if (FUNCTION_NAME == 'front')
-  ExpressAppBuilder.buildFront(main);
-else if (FUNCTION_NAME == 'api')
-  ExpressAppBuilder.buildApi(main);
+function loadAndBuild(aEndpoint,aExpress) {
+  console.log('loadAndBuild '+aEndpoint)
+  const {build} = require('./'+aEndpoint);
+  return build(aExpress);
+}
+
+
+const main = loadAndBuild('main',express());
+
+if (FUNCTION_NAME)
+  loadAndBuild(FUNCTION_NAME,main);
 
 exports.front = functions.https.onRequest(main);
 exports.api = functions.https.onRequest(main);
