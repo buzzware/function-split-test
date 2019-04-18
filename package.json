@@ -18,7 +18,7 @@
   },
   "devDependencies": {},
   "engines": {
-    "node": "6.* || 8.* || >= 10.*"
+    "node": "8"
   },
   "dependencies": {
     "firebase-admin": ">6.1.0",

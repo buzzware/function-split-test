@@ -1,6 +1,6 @@
-const {FUNCTION_NAME} = process.env;
-
 const functions = require('firebase-functions');
+
+const {FUNCTION_NAME} = process.env;
 
 const express = require('@feathersjs/express');
 
@@ -51,17 +51,3 @@ and
 http://localhost:5001/function-split-test/us-central1/app/express
 http://localhost:3030/app/express
 */
-
-// /* eslint-disable no-console */
-// const logger = require('./logger');
-// const app = require('./app');
-// const port = app.get('port');
-// const server = app.listen(port);
-//
-// process.on('unhandledRejection', (reason, p) =>
-//   logger.error('Unhandled Rejection at: Promise ', p, reason)
-// );
-//
-// server.on('listening', () =>
-//   logger.info('Feathers application started on http://%s:%d', app.get('host'), port)
-// );
