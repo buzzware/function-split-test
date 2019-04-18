@@ -1,17 +1,12 @@
+import {ExpressAppBuilder} from "./expressAppBuilder";
+
 const {FUNCTION_NAME} = process.env;
 
 const functions = require('firebase-functions');
 
 const express = require('@feathersjs/express');
 
-const mainExpress = express();
-
-mainExpress.all('*', async (req, res, next) => {
-  const { path } = req;
-  console.info('Received request at', path);
-  //console.log(req);
-  return next();
-});
+const ExpressAppBuilder = require('./ExpressAppBuilder');
 
 /*
 
@@ -37,32 +32,15 @@ decorate it according to the function we are serving.
 Then we ask firebase functions to serve the express app for every function.
 
 */
+const main = ExpressAppBuilder.buildMain(express());
 
-console.log('setting up '+FUNCTION_NAME);
-if (FUNCTION_NAME=='app') {
-  const app = require('./app/index').app;
-  app(mainExpress);
-} else if (FUNCTION_NAME=='api') {
-  const feathers = require('@feathersjs/feathers');
-  const MyService = require('./services/MyService');
+if (FUNCTION_NAME == 'front')
+  main.use(ExpressAppBuilder.buildFront(main));
+else if (FUNCTION_NAME == 'api')
+  main.use(ExpressAppBuilder.buildApi(main));
 
-  const logger = require('./logger');
-  const apiExpress = require('./api');
-  const port = apiExpress.get('port');
-  //const server = apiExpress.listen(port);
-
-  // process.on('unhandledRejection', (reason, p) =>
-  //   logger.error('Unhandled Rejection at: Promise ', p, reason)
-  // );
-
-  //const apiExpress = express(feathers()).configure(express.rest());
-  apiExpress.use('/service', new MyService());
-  apiExpress.setup(mainExpress);  // required by feathers for subapps
-  mainExpress.use(apiExpress);
-}
-
-exports.app = functions.https.onRequest(mainExpress);
-exports.api = functions.https.onRequest(mainExpress);
+exports.front = functions.https.onRequest(main);
+exports.api = functions.https.onRequest(main);
 
 /*
 should serve at eg. :

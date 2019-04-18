@@ -2,16 +2,19 @@ const ExpressUtils = require('../utilities/ExpressUtils');
 const express = require('express');
 const morgan = require('morgan');
 
-exports.app = function(expressApp) {
+exports.build = function(aExpress) {
+  if (!aExpress)
+    aExpress = express();
 
-  expressApp.use(morgan('dev'));
-  expressApp.use(express.json());
+  aExpress.use(morgan('dev'));
+  aExpress.use(express.json());
   // expressApp.use(express.urlencoded({ extended: false }));
   //expressApp.use(cookieParser());
   //expressApp.use(express.static(path.join(__dirname, 'public')));
 
-  ExpressUtils.jsonEndpoint(expressApp,null,'/express','GET',(req)=>{
-    return {message: 'hi from express'};
+  ExpressUtils.jsonEndpoint(aExpress,null,'/hello','GET',(req)=>{
+    return {message: 'hello from front'};
   });
 
+  return aExpress;
 };

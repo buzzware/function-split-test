@@ -1,42 +1,26 @@
-const feathers = require('@feathersjs/feathers');
 const express = require('@feathersjs/express');
-const MyService = require('./services/MyService');
-let app = require('./app/index').app;
 
-// function dummy(){
-//   return functions.https.onRequest(function (req,res) {
-//     console.log('BEGIN dummy');
-//     res.writeHead(200, {'Content-Type': 'text/plain'});
-//     res.end('Dummy Endpoint');
-//     res.end();
-//   });
-// }
+const ExpressAppBuilder = require('./ExpressAppBuilder');
 
-const mainExpress = express();
+const main = ExpressAppBuilder.buildMain();
+const api = ExpressAppBuilder.buildApi();
+const front = ExpressAppBuilder.buildFront();
 
-mainExpress.all('*', async (req, res, next) => {
-  const { path } = req;
-  console.info('Received request at', path);
-  //console.log(req);
-  return next();
+let port = api.get('port');
+
+main.use('/api',api);
+main.use('/front',front);
+
+main.listen(port, function(){
+  console.log('The server is running, ' +
+    ' please, open your browser at http://localhost:%s',
+    port);
 });
-
-let appExpress = express();
-app(appExpress);
-mainExpress.use('/app', appExpress);
-
-// setup feathers api
-const apiExpress = express(feathers()).configure(express.rest());
-apiExpress.use('/service', new MyService());
-mainExpress.use('/api', apiExpress);
-apiExpress.setup(mainExpress);  // required by feathers for subapps
-
-const server = mainExpress.listen(3030);
 
 /*
 should serve at :
 
 http://localhost:3030/api/service
-http://localhost:3030/app/express
+http://localhost:3030/front/hello
 
 */
