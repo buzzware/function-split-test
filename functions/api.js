@@ -23,31 +23,31 @@ function build() {
 // Load app configuration
   api.configure(configuration());
 // Enable security, CORS, compression, favicon and body parsing
-//   api.use(helmet());
-//   api.use(cors());
-//   api.use(compress());
-//   api.use(express.json());
-//   api.use(express.urlencoded({extended: true}));
-  //api.use(favicon(path.join(api.get('public'), 'favicon.ico')));
+  api.use(helmet());
+  api.use(cors());
+  api.use(compress());
+  api.use(express.json());
+  api.use(express.urlencoded({extended: true}));
+  api.use(favicon(path.join(api.get('public'), 'favicon.ico')));
 // Host the public folder
-  //api.use('/', express.static(api.get('public')));
+  api.use('/', express.static(api.get('public')));
 
 // Set up Plugins and providers
   api.configure(express.rest());
 
 
-// // Configure other middleware (see `middleware/index.js`)
-//   api.configure(middleware);
-// // Set up our services (see `services/index.js`)
-//   api.configure(services);
-// // Set up event channels (see channels.js)
-//   api.configure(channels);
+// Configure other middleware (see `middleware/index.js`)
+  api.configure(middleware);
+// Set up our services (see `services/index.js`)
+  api.configure(services);
+// Set up event channels (see channels.js)
+  api.configure(channels);
 
 // Configure a middleware for 404s and the error handler
-//  api.use(express.notFound());
-//  api.use(express.errorHandler({logger}));
+  // api.use(express.notFound()); // let our api handle its endpoints
+ api.use(express.errorHandler({logger}));
 
-  // api.hooks(appHooks);
+  api.hooks(appHooks);
   return api;
 }
 
