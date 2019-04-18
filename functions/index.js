@@ -1,5 +1,3 @@
-import {ExpressAppBuilder} from "./expressAppBuilder";
-
 const {FUNCTION_NAME} = process.env;
 
 const functions = require('firebase-functions');
@@ -35,9 +33,9 @@ Then we ask firebase functions to serve the express app for every function.
 const main = ExpressAppBuilder.buildMain(express());
 
 if (FUNCTION_NAME == 'front')
-  main.use(ExpressAppBuilder.buildFront(main));
+  ExpressAppBuilder.buildFront(main);
 else if (FUNCTION_NAME == 'api')
-  main.use(ExpressAppBuilder.buildApi(main));
+  ExpressAppBuilder.buildApi(main);
 
 exports.front = functions.https.onRequest(main);
 exports.api = functions.https.onRequest(main);

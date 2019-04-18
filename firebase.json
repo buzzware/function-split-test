@@ -8,7 +8,7 @@
     ],
     "rewrites": [
       {
-        "source": "/app/**", "function": "app"
+        "source": "/front/**", "function": "front"
       },
       {
         "source": "/api/**", "function": "api"
@@ -16,5 +16,6 @@
     ]
   },
   "functions": {
+    "source": "functions"
   }
 }
