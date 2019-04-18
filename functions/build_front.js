@@ -1,4 +1,4 @@
-const ExpressUtils = require('../utilities/ExpressUtils');
+const ExpressUtils = require('./utilities/ExpressUtils');
 const express = require('express');
 const morgan = require('morgan');
 

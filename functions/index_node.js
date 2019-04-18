@@ -1,9 +1,5 @@
 const express = require('@feathersjs/express');
-
-function loadAndBuild(aEndpoint,aExpress) {
-  const {build} = require('./'+aEndpoint);
-  return build(aExpress);
-}
+const {loadAndBuild} = require('./firebuilder');
 
 
 const main = loadAndBuild('main'  );
@@ -20,11 +16,3 @@ main.listen(port, function(){
     ' please, open your browser at http://localhost:%s',
     port);
 });
-
-/*
-should serve at :
-
-http://localhost:3030/api/service
-http://localhost:3030/front/hello
-
-*/
