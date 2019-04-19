@@ -39,9 +39,8 @@ We have :
 * Unlike index.js, this hosts all apps in the normal way
 
 ### build_*.js
-* These files must exist one-per-app
-* These files must export a build() function :
-  * with one parameter, an express app that may be null. 
-  * which returns an express app    
-  * If the given express app is null, the function may create its own express app and return it, otherwise it should use and return the given one. Express apps created in the function should be "use()"-ed by any provided app.
+* These files must exist for each app
+* These files export a build() function that :
+  * returns an express compatible app    
+  * can receive parameters passed into loadAndBuild 
   

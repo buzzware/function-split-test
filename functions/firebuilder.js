@@ -1,8 +1,15 @@
 /*
 
-Whats going on here ?
+# The "Firebuilder" pattern for structuring Firebase functions apps
 
-Background :
+## Goals
+* To create a clean organised convention for structuring one or more Firebase Functions apps, in a single project functions folder
+* To be compatible with Firebase Functions hosting, local "firebase serve" emulation, and plain node.js for local debugging eg. in Jetbrains WebStorm/IntelliJ IDEA etc
+* To encourage use of express.js to host an entire app per function
+* To make efficient use of how Firebase Functions creates a something like a container per function, that contains code for all of our functions, and to minimise unnecessary cold start time wasted in setting up other functions that will never be executed.
+* To support express-compatible frameworks - Feathersjs in particular
+
+## Background
 * GCP creates a separate runtime per function, and each function
 executes with FUNCTION_NAME set to the name of the assigned function.
 * There is no need to initialise dependencies for functions that the
@@ -15,11 +22,32 @@ functions we will never execute in each runtime.
 some methods of conditional exports caused them to fail to be found, so this is code
 is a bit fragile.
 
-Description:
+## Description
 
-Basically we create an express app (feathers version of express) and conditionally
-decorate it according to the function we are serving.
-Then we ask firebase functions to serve the express app for every function.
+We have :
+1. the index.js file required by Firebase Functions, and an equivalent index_node.js entry point for plain node.js
+2. the firebuilder.js file that contains the loadAndBuild method and documentation of this pattern. This is only used by index.js and index_node.js
+3. one build_*.js file per app, named by the exported firebase function names
+
+### index.js
+* This creates the main express app, perhaps using loadAndBuild and build_main.js. This is not for application logic - it is for framework type functionality
+* It then uses loadAndBuild to conditionally add one app to the main app
+* It then exports all endpoints with the main app. Remember that in the Firebase Functions runtime, there will be a runtime created per exported function, and only the FUNCTION_NAME function will actually be used for each.
+
+### index_node.js
+* This creates the main express app, perhaps using loadAndBuild and build_main.js. This is not for application logic - it is for framework type functionality
+* It then builds each app and attaches it to the main app
+* It then calls listen on the main app.
+* Unlike index.js, this hosts all apps in the normal way
+
+### build_*.js
+* These files must exist one-per-app
+* These files must export a build() function :
+  * with one parameter, an express app that may be null.
+  * which returns an express app
+  * If the given express app is null, the function may create its own express app and return it, otherwise it should use and return the given one. Express apps created in the function should be "use()"-ed by any provided app.
+
+This file, index.js and index_node.js can be copied into the functions folder of firebase projects to document the pattern for apps.
 
 */
 
@@ -45,9 +73,7 @@ http://localhost:3030/front/hello
 */
 
 
-module.exports.loadAndBuild = function loadAndBuild(aEndpoint,aExpress) {
-  console.log('loadAndBuild '+aEndpoint)
+module.exports.loadAndBuild = function loadAndBuild(aEndpoint,...args) {
   const {build} = require('./build_'+aEndpoint);
-  return build(aExpress);
+  return build(...args);
 };
-

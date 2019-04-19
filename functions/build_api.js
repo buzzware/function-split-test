@@ -19,7 +19,7 @@ const channels = require('./channels');
 //const feathers = require('@feathersjs/feathers');
 const MyService = require('./services/MyService');
 
-module.exports.build = function(aExpress) {
+module.exports.build = function() {
 
   const api = express(feathers());
 
@@ -54,10 +54,8 @@ module.exports.build = function(aExpress) {
 
   api.hooks(appHooks);
 
-  if (aExpress)
-    aExpress.use(api);
-  let result = aExpress || api;
-  api.setup(result);  // required by feathers for subapps
-  return result;
+  api.setup(api);  // required by feathers for subapps
+
+  return api;
 }
 
