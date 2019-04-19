@@ -2,7 +2,7 @@ const express = require('@feathersjs/express');
 const {loadAndBuild} = require('./firebuilder');
 
 
-const main = loadAndBuild('main'  );
+const main = loadAndBuild('main');
 const api = loadAndBuild('api');
 const front = loadAndBuild('front');
 
